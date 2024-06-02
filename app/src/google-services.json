@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "219791022765",
+    "project_id": "threadsappjpc",
+    "storage_bucket": "threadsappjpc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219791022765:android:4d09d286e7030db13d4424",
+        "android_client_info": {
+          "package_name": "com.vijay.threadsappjpc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC55rJIfLDA7J2gDl4Fkb5vNIm_EFpSmWI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
