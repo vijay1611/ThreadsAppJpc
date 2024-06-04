@@ -1,5 +1,6 @@
 package com.vijay.threadsappjpc.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,22 +16,36 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.vijay.threadsappjpc.navigation.Routes
+import com.vijay.threadsappjpc.viewModels.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Login(navHostController: NavHostController) {
+
+    val authViewModel : AuthViewModel = viewModel()
+    val firebaseValue = authViewModel.firebaseUser.observeAsState()
+    val errorMsg = authViewModel.error.observeAsState()
+
+    val context = LocalContext.current
+
+    errorMsg?.let {
+        Toast.makeText(context, it.toString(), Toast.LENGTH_SHORT).show()
+    }
 
     var email by remember {
         mutableStateOf("")
@@ -38,6 +53,8 @@ fun Login(navHostController: NavHostController) {
     var password by remember {
         mutableStateOf("")
     }
+
+
 
     Column(
         modifier = Modifier
@@ -70,7 +87,9 @@ fun Login(navHostController: NavHostController) {
             modifier = Modifier.fillMaxWidth()
         )
         Box(modifier = Modifier.height(30.dp))
-        ElevatedButton(onClick = { /*TODO*/ },
+        ElevatedButton(onClick = {
+                     authViewModel.login(email,password,context)
+        },
             modifier = Modifier.fillMaxWidth()) {
             Text(text = "Login",
                 style = TextStyle(

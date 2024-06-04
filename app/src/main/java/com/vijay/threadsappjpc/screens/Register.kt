@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,6 +27,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -62,6 +64,9 @@ fun Register(navHostController: NavHostController) {
     var name by remember {
         mutableStateOf("")
     }
+    var userName by remember {
+        mutableStateOf("")
+    }
     var bio by remember {
         mutableStateOf("")
     }
@@ -87,6 +92,9 @@ fun Register(navHostController: NavHostController) {
     val authViewModel : AuthViewModel = viewModel()
     val firebaseUser by authViewModel.firebaseUser.observeAsState(null)
 
+    Log.d("***1", firebaseUser.toString())
+
+
     val permissionLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()){
         isGranted : Boolean ->
         if(isGranted) {
@@ -95,6 +103,16 @@ fun Register(navHostController: NavHostController) {
 
         }
     }
+    LaunchedEffect(firebaseUser){
+        if(firebaseUser!=null){
+            navHostController.navigate(Routes.Home.routes){
+                Log.d("***2", firebaseUser.toString())
+                popUpTo(navHostController.graph.startDestinationId)
+                launchSingleTop=true
+            }
+        }
+    }
+
 
     Column(
         modifier = Modifier
@@ -146,6 +164,14 @@ fun Register(navHostController: NavHostController) {
             ), singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
+        OutlinedTextField(value = userName, onValueChange = { userName = it }, label = {
+            Text(text = "UserName")
+        },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text
+            ), singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
         OutlinedTextField(value = password, onValueChange = { password = it }, label = {
             Text(text = "Password")
         },
@@ -168,7 +194,8 @@ fun Register(navHostController: NavHostController) {
                                      || bio.isEmpty() || password.isEmpty() || imageUri == null){
                                      Toast.makeText(context, "Please fill all the field", Toast.LENGTH_SHORT).show()
                                  }else{
-                                     authViewModel.re
+                                     Log.d("***3", firebaseUser.toString())
+                                     authViewModel.register(email,password,name,bio, userName,imageUri!!,context)
                                  }
         },
             modifier = Modifier.fillMaxWidth()) {

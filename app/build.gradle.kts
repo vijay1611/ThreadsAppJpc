@@ -74,6 +74,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$nav_version")
     //----------------------live data
     implementation("androidx.compose.runtime:runtime-livedata:1.6.5")
+   //constraint layout
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     //firebase
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))

@@ -44,7 +44,7 @@ fun BottomNav(){
                 Notification()
             }
             composable(Routes.Profile.routes){
-                Profile()
+                Profile(navController1)
             }
 
         }
