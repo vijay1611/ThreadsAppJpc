@@ -15,6 +15,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -38,13 +39,13 @@ import com.vijay.threadsappjpc.viewModels.AuthViewModel
 fun Login(navHostController: NavHostController) {
 
     val authViewModel : AuthViewModel = viewModel()
-    val firebaseValue = authViewModel.firebaseUser.observeAsState()
+    val firebaseValue by authViewModel.firebaseUser.observeAsState()
     val errorMsg = authViewModel.error.observeAsState()
 
     val context = LocalContext.current
 
     errorMsg?.let {
-        Toast.makeText(context, it.toString(), Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
     }
 
     var email by remember {
@@ -55,58 +56,74 @@ fun Login(navHostController: NavHostController) {
     }
 
 
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Login",
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 25.sp
+                    )
+                )
+                Box(modifier = Modifier.height(20.dp))
+                OutlinedTextField(value = email, onValueChange = { email = it }, label = {
+                    Text(text = "Email")
+                },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email
+                    ), singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(value = password, onValueChange = { password = it }, label = {
+                    Text(text = "Password")
+                },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Password
+                    ), singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Box(modifier = Modifier.height(30.dp))
+                ElevatedButton(
+                    onClick = {
+                        if (email.isEmpty() || password.isEmpty()) {
+                            Toast.makeText(context, "Some fields are missing", Toast.LENGTH_SHORT)
+                                .show()
+                        } else {
+                            authViewModel.login(email, password, context)
+                        }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text ="Login",
-            style = TextStyle(
-                fontWeight = FontWeight.Bold,
-                fontSize = 25.sp
-            )
-        )
-        Box(modifier = Modifier.height(20.dp))
-        OutlinedTextField(value = email, onValueChange = { email = it }, label = {
-            Text(text = "Email")
-        },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email
-            ), singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
-        OutlinedTextField(value = password, onValueChange = { password = it }, label = {
-            Text(text = "Password")
-        },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password
-            ), singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Box(modifier = Modifier.height(30.dp))
-        ElevatedButton(onClick = {
-                     authViewModel.login(email,password,context)
-        },
-            modifier = Modifier.fillMaxWidth()) {
-            Text(text = "Login",
-                style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 25.sp
-                ))
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Login",
+                        style = TextStyle(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 25.sp
+                        )
+                    )
+                }
+                TextButton(
+                    onClick = {
+                        navHostController.navigate(Routes.Register.routes) {
+                            popUpTo(navHostController.graph.startDestinationId)
+                            launchSingleTop = true
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "New User? Create Account...",
+                        style = TextStyle(
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 16.sp
+                        )
+                    )
+                }
+            }
         }
-        TextButton(onClick = { navHostController.navigate(Routes.Register.routes){
-            popUpTo(navHostController.graph.startDestinationId)
-            launchSingleTop=true
-        }},
-            modifier = Modifier.fillMaxWidth()) {
-            Text(text = "New User? Create Account...",
-                style = TextStyle(
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp
-                ))
-        }
-    }
-}

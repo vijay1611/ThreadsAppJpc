@@ -22,7 +22,7 @@ fun NavGraph(navController : NavHostController){
 
         }
         composable(Routes.Home.routes){
-            Home()
+            Home(navController)
         }
         composable(Routes.Notification.routes){
             Notification()
@@ -37,10 +37,10 @@ fun NavGraph(navController : NavHostController){
            Register(navController)
         }
         composable(Routes.Search.routes){
-            Search()
+            Search(navController)
         }
         composable(Routes.AddThreads.routes){
-             AddThreads()
+             AddThreads(navController)
         }
         composable(Routes.BottomNav.routes){
             BottomNav()
